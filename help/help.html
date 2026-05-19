@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center & Interactive Roadmap — PDF Annotate Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-logo">📄</span>
+        <span class="brand-name">PDF Annotate Pro</span>
+        <span class="brand-badge">Help Center</span>
+      </div>
+      <a href="../annotator/annotator.html" class="back-link">← Back to Editor</a>
+    </div>
+  </nav>
+
+  <div class="help-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="help-sidebar">
+      <ul class="sidebar-menu">
+        <li class="menu-item active" data-target="guide">📖 How to Use</li>
+        <li class="menu-item" data-target="roadmap">🗺️ Future Product Roadmap</li>
+        <li class="menu-item" data-target="implementation">💻 Developer Implementation List</li>
+        <li class="menu-item" data-target="comparison">⚡ iLovePDF Comparison</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="help-main">
+      
+      <!-- ── SECTION: HOW TO USE ── -->
+      <section id="sec-guide" class="content-section active">
+        <h1 class="section-title">How to Use PDF Annotate Pro 📖</h1>
+        <p class="section-sub">Get started with our lightweight, 100% private, and local browser workspace.</p>
+
+        <div class="guide-grid">
+          <div class="guide-card">
+            <div class="card-num">01</div>
+            <h3 class="card-title">Import your PDF</h3>
+            <p class="card-desc">Click the PDF Annotate Pro icon in your browser popup to select a local PDF file, paste a direct PDF web URL, or drag and drop any file directly into the interface.</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="card-num">02</div>
+            <h3 class="card-title">Markup and Annotate</h3>
+            <p class="card-desc">Use the smart highlighter to mark text in tailored neon colors, drop custom text notes anywhere, draw freehand with the pen tool, or insert stamps and vector shapes (Pro).</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="card-num">03</div>
+            <h3 class="card-title">Bake & Export</h3>
+            <p class="card-desc">Click "Export PDF" in the sidebar. Our client-side rendering engine embeds all your markings natively into the PDF binary, compatible with Adobe Acrobat and standard readers.</p>
+          </div>
+        </div>
+
+        <div class="info-alert">
+          💡 <strong>Pro Tip:</strong> Toggle **Smart Dark Mode** in the sidebar at night to read comfortable without eye strain!
+        </div>
+      </section>
+
+      <!-- ── SECTION: ROADMAP ── -->
+      <section id="sec-roadmap" class="content-section">
+        <h1 class="section-title">Future Product Roadmap 🗺️</h1>
+        <p class="section-sub">We are actively building the next generation of offline, browser-based PDF tools. Here is our release plan:</p>
+
+        <div class="timeline">
+          <div class="timeline-item done">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="tag tag-completed">Released v1.0</span>
+              <h3 class="timeline-title">Core Annotator Workspace & Razorpay Payments</h3>
+              <p class="timeline-desc">Implemented client-side PDF rendering, freehand pen, highlights, text notes, automated licensing key systems, and Razorpay subscription sandbox flow.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item current">
+            <div class="timeline-dot animate-pulse"></div>
+            <div class="timeline-content">
+              <span class="tag tag-progress">In Progress v1.2</span>
+              <h3 class="timeline-title">Advanced Editing Elements & Dynamic Stamps</h3>
+              <p class="timeline-desc">Adding signature pads, shapes (Arrows, Circles, Rectangles), pre-made business stamp templates, and direct local storage file recovery.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item planned">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="tag tag-next">Q3 2026</span>
+              <h3 class="timeline-title">Offline Merging, Splitting & Reordering</h3>
+              <p class="timeline-desc">100% serverless, local PDF manipulation. Merge files, split specific pages, delete unwanted pages, and reorder thumbnails dynamically via drag-and-drop.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item planned">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="tag tag-future">Q4 2026</span>
+              <h3 class="timeline-title">Local OCR & Password Security Tools</h3>
+              <p class="timeline-desc">Integrate Tesseract.js for offline optical character recognition. Also add client-side encryption to lock PDFs with password restrictions without server uploads.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SECTION: DEVELOPER IMPLEMENTATION LIST ── -->
+      <section id="sec-implementation" class="content-section">
+        <h1 class="section-title">Developer Implementation Guide 💻</h1>
+        <p class="section-sub">How to implement advanced local browser tools inside PDF Annotate Pro using client-side JavaScript libraries.</p>
+
+        <div class="tech-box">
+          <h3>📦 Recommended Client-Side Core Stack</h3>
+          <ul>
+            <li><strong>PDF Rendering:</strong> <code>pdf.js</code> (Mozilla) — renders PDF pages onto canvas viewports.</li>
+            <li><strong>PDF Generation & Modification:</strong> <code>pdf-lib</code> — modify, write, and export PDF binaries offline.</li>
+            <li><strong>Offline OCR:</strong> <code>tesseract.js</code> — client-side image text extraction.</li>
+          </ul>
+        </div>
+
+        <div class="impl-step">
+          <h4>1. Dynamic PDF Merging & Splitting (100% Local)</h4>
+          <p>Using <code>pdf-lib</code>, you can load multiple file buffers and copy pages into a single document without complex servers.</p>
+          <pre><code>// Merge two PDF documents client-side
+import { PDFDocument } from 'pdf-lib';
+
+async function mergePDFs(pdfBuffer1, pdfBuffer2) {
+  const mergedPdf = await PDFDocument.create();
+  
+  const doc1 = await PDFDocument.load(pdfBuffer1);
+  const doc2 = await PDFDocument.load(pdfBuffer2);
+  
+  const copiedPages1 = await mergedPdf.copyPages(doc1, doc1.getPageIndices());
+  copiedPages1.forEach((page) => mergedPdf.addPage(page));
+  
+  const copiedPages2 = await mergedPdf.copyPages(doc2, doc2.getPageIndices());
+  copiedPages2.forEach((page) => mergedPdf.addPage(page));
+  
+  const mergedPdfBytes = await mergedPdf.save();
+  return mergedPdfBytes; // 100% local download!
+}</code></pre>
+        </div>
+
+        <div class="impl-step">
+          <h4>2. Browser-Specific Page Extraction & Deletion</h4>
+          <p>Instantly select a range of pages and create a new subset PDF, ideal for students and workspace reports.</p>
+          <pre><code>async function extractPages(pdfBuffer, pageIndicesToKeep) {
+  const srcDoc = await PDFDocument.load(pdfBuffer);
+  const newDoc = await PDFDocument.create();
+  
+  const copiedPages = await newDoc.copyPages(srcDoc, pageIndicesToKeep);
+  copiedPages.forEach((page) => newDoc.addPage(page));
+  
+  return await newDoc.save();
+}</code></pre>
+        </div>
+
+        <div class="impl-step">
+          <h4>3. Local OCR Processing (Offline Tesseract)</h4>
+          <p>Implement offline OCR on scanned PDFs by converting canvas pixels into images and parsing them with Tesseract.js worker threads.</p>
+          <pre><code>async function runOcrOnPageCanvas(canvas) {
+  const worker = await Tesseract.createWorker();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  
+  const { data: { text } } = await worker.recognize(canvas);
+  await worker.terminate();
+  return text; // Editable OCR text extracted locally!
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ── SECTION: ILOVEPDF COMPARISON ── -->
+      <section id="sec-comparison" class="content-section">
+        <h1 class="section-title">iLovePDF Comparison Analysis ⚡</h1>
+        <p class="section-sub">A performance and architectural comparison between iLovePDF's hybrid extension and PDF Annotate Pro's local-first framework.</p>
+
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Feature Aspect</th>
+              <th>iLovePDF Extension 🌐</th>
+              <th>PDF Annotate Pro 📄 (Ours)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Privacy & GDPR</strong></td>
+              <td class="red-text">❌ Uploads files to remote servers for processing.</td>
+              <td class="green-text">✅ 100% Secure. Everything runs locally in browser.</td>
+            </tr>
+            <tr>
+              <td><strong>Offline Capabilities</strong></td>
+              <td class="red-text">❌ Fails to work without internet connection.</td>
+              <td class="green-text">✅ Full local editing works completely offline.</td>
+            </tr>
+            <tr>
+              <td><strong>Subscription Model</strong></td>
+              <td class="red-text">❌ Recurring monthly subscription traps.</td>
+              <td class="green-text">✅ Lifetime license with one-time payment.</td>
+            </tr>
+            <tr>
+              <td><strong>Text & Freehand Markup</strong></td>
+              <td>⚠️ Limited text placement.</td>
+              <td class="green-text">✅ Multi-color highlights, text notes, freehand pen.</td>
+            </tr>
+            <tr>
+              <td><strong>Stamps & Vectors</strong></td>
+              <td>⚠️ Static uploads only.</td>
+              <td class="green-text">✅ Preset categories (DRAFT, APPROVED) + vector shapes.</td>
+            </tr>
+            <tr>
+              <td><strong>Page Size Lag</strong></td>
+              <td class="red-text">❌ Freezes/lags with large documents on cloud.</td>
+              <td class="green-text">✅ <code>unlimitedStorage</code> support prevents file size limits.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="help.js"></script>
+</body>
+</html>

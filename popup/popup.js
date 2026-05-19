@@ -35,6 +35,21 @@ function loadPlan() {
 }
 loadPlan();
 
+// ── Recent Files Helpers ─────────────────────────────────────────
+function addRecentFile(name, url) {
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get(['recentFiles'], (data) => {
+      let list = data.recentFiles || [];
+      // filter out duplicates
+      list = list.filter(f => f.url !== url && f.name !== name);
+      // insert at beginning
+      list.unshift({ name, url, time: Date.now() });
+      if (list.length > 5) list.pop();
+      chrome.storage.local.set({ recentFiles: list });
+    });
+  }
+}
+
 // ── Open PDF File ────────────────────────────────────────────────
 document.getElementById('btn-open-file').addEventListener('click', () => {
   document.getElementById('file-input').click();
@@ -48,6 +63,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
     return;
   }
   const url = URL.createObjectURL(file);
+  addRecentFile(file.name, url);
   const annotatorUrl = chrome.runtime.getURL(
     `annotator/annotator.html?pdf=${encodeURIComponent(url)}&name=${encodeURIComponent(file.name)}`
   );
@@ -64,8 +80,11 @@ function openPdfUrl(rawUrl) {
   if (!rawUrl.toLowerCase().includes('.pdf') && !rawUrl.startsWith('blob:')) {
     showToast('URL may not be a PDF — proceeding anyway');
   }
+  const trimmedUrl = rawUrl.trim();
+  const name = trimmedUrl.substring(trimmedUrl.lastIndexOf('/') + 1) || 'document.pdf';
+  addRecentFile(name, trimmedUrl);
   const annotatorUrl = chrome.runtime.getURL(
-    `annotator/annotator.html?pdf=${encodeURIComponent(rawUrl.trim())}`
+    `annotator/annotator.html?pdf=${encodeURIComponent(trimmedUrl)}`
   );
   chrome.tabs.create({ url: annotatorUrl });
   window.close();
@@ -86,8 +105,10 @@ document.getElementById('btn-current-tab').addEventListener('click', () => {
     if (!tab) return;
     const url = tab.url || '';
     if (url.toLowerCase().includes('.pdf') || tab.title?.toLowerCase().includes('pdf')) {
+      const name = tab.title || 'document.pdf';
+      addRecentFile(name, url);
       const annotatorUrl = chrome.runtime.getURL(
-        `annotator/annotator.html?pdf=${encodeURIComponent(url)}&name=${encodeURIComponent(tab.title || 'document.pdf')}`
+        `annotator/annotator.html?pdf=${encodeURIComponent(url)}&name=${encodeURIComponent(name)}`
       );
       chrome.tabs.create({ url: annotatorUrl });
       window.close();
@@ -119,8 +140,52 @@ document.getElementById('link-license').addEventListener('click', () => {
 
 // ── Help ─────────────────────────────────────────────────────────
 document.getElementById('link-help').addEventListener('click', () => {
-  chrome.tabs.create({ url: 'https://github.com' }); // replace with real help URL
+  chrome.tabs.create({ url: chrome.runtime.getURL('help/help.html') });
   window.close();
+});
+
+// ── Recent Files Modal ───────────────────────────────────────────
+const recentPanel = document.getElementById('recent-panel');
+const recentList = document.getElementById('recent-list');
+
+document.getElementById('link-history').addEventListener('click', () => {
+  chrome.storage.local.get(['recentFiles'], (data) => {
+    const list = data.recentFiles || [];
+    recentList.innerHTML = '';
+    if (list.length === 0) {
+      recentList.innerHTML = `<div class="recent-empty">No recent files opened yet.<br/>Open a PDF to start your list!</div>`;
+    } else {
+      list.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'recent-item';
+        const formattedTime = new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        div.innerHTML = `
+          <span class="recent-item-icon">📄</span>
+          <div class="recent-item-info">
+            <div class="recent-item-name">${item.name}</div>
+            <div class="recent-item-meta">${item.url.startsWith('blob:') ? 'Local File' : 'Web URL'} · ${formattedTime}</div>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+          if (item.url.startsWith('blob:')) {
+            showToast('Local file blobs expire. Please re-open your file.');
+          } else {
+            const annotatorUrl = chrome.runtime.getURL(
+              `annotator/annotator.html?pdf=${encodeURIComponent(item.url)}&name=${encodeURIComponent(item.name)}`
+            );
+            chrome.tabs.create({ url: annotatorUrl });
+            window.close();
+          }
+        });
+        recentList.appendChild(div);
+      });
+    }
+    recentPanel.classList.add('show');
+  });
+});
+
+document.getElementById('recent-close').addEventListener('click', () => {
+  recentPanel.classList.remove('show');
 });
 
 // ── Toast ────────────────────────────────────────────────────────

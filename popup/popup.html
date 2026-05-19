@@ -298,6 +298,63 @@
       white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Recent Files Panel ── */
+    .recent-panel {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(10, 14, 26, 0.96);
+      z-index: 100;
+      padding: 20px;
+      flex-direction: column;
+      animation: slideUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .recent-panel.show { display: flex; }
+    
+    .recent-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 10px;
+    }
+    .recent-title { font-size: 14px; font-weight: 700; color: #fff; }
+    .recent-close {
+      background: transparent; border: none; color: #7986cb;
+      font-size: 11px; cursor: pointer; font-weight: 700;
+      padding: 4px 8px; border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .recent-close:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    
+    .recent-list {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+    }
+    .recent-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .recent-item:hover {
+      background: rgba(108,99,255,0.08); border-color: rgba(108,99,255,0.25);
+    }
+    .recent-item-icon { font-size: 14px; }
+    .recent-item-info { flex: 1; min-width: 0; }
+    .recent-item-name {
+      font-size: 12px; font-weight: 500; color: #e8eaf6;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .recent-item-meta { font-size: 9px; color: #546e7a; margin-top: 2px; }
+    .recent-empty {
+      text-align: center; color: #546e7a; font-size: 11px; margin-top: 40px;
+      line-height: 1.5;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -371,6 +428,17 @@
     <a class="footer-link" id="link-license">Enter License Key</a>
     <a class="footer-link" id="link-history">Recent Files</a>
     <a class="footer-link" id="link-help">Help</a>
+  </div>
+
+  <!-- Recent Files Panel Overlay -->
+  <div class="recent-panel" id="recent-panel">
+    <div class="recent-header">
+      <span class="recent-title">📂 Recent Files</span>
+      <button class="recent-close" id="recent-close">Close</button>
+    </div>
+    <div class="recent-list" id="recent-list">
+      <div class="recent-empty">No recent files opened yet.<br/>Open a PDF to start your list!</div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>

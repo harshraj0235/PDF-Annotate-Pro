@@ -39,6 +39,7 @@
       "resources": [
         "annotator/*",
         "upgrade/*",
+        "help/*",
         "lib/*",
         "icons/*"
       ],
