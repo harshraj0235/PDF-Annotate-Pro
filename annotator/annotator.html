@@ -123,6 +123,7 @@
     <!-- Right Side Actions -->
     <div class="tb-right">
       <!-- Advanced Action Buttons -->
+      <button class="action-btn" id="btn-pro-toolbox" title="Advanced PDF Tools Dashboard" style="font-size: 11.5px; background: rgba(108,99,255,0.2); border: 1px solid rgba(108,99,255,0.45); color: #fff; padding: 5px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; font-weight: 600; margin-right: 4px;">🛠️ Tools</button>
       <button class="action-btn" id="btn-dark-mode" title="Dark Mode (D)">🌙</button>
       <button class="action-btn" id="btn-rotate" title="Rotate Page (Shift+R)">🔄</button>
       <button class="action-btn" id="btn-clear-all" title="Clear All Annotations">🗑️</button>
@@ -319,6 +320,279 @@
     <div class="sig-actions" style="margin-top:16px;">
       <button class="sig-btn" id="url-cancel-btn">Cancel</button>
       <button class="sig-btn primary" id="url-open-btn">Open PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADVANCED PDF TOOLS DASHBOARD MODAL ═════════════════════════ -->
+<div id="tools-modal" class="hidden">
+  <div class="tools-dashboard">
+    <!-- Header -->
+    <div class="td-header">
+      <div class="td-brand">
+        <span class="td-logo">🛠️</span>
+        <div>
+          <h2 class="td-title">Advanced PDF Toolbox</h2>
+          <p class="td-sub">Professional offline client-side document actions</p>
+        </div>
+      </div>
+      <button class="td-close" id="tools-close-btn">&times;</button>
+    </div>
+    
+    <!-- Body -->
+    <div class="td-body">
+      <!-- Sidebar Navigation Menu -->
+      <aside class="td-sidebar">
+        <ul class="td-menu">
+          <li class="td-menu-item active" data-tool="merge">📑 Merge PDFs</li>
+          <li class="td-menu-item" data-tool="split">✂️ Split PDF</li>
+          <li class="td-menu-item" data-tool="organize">📁 Organize Pages</li>
+          <li class="td-menu-item" data-tool="rotate">🔄 Rotate Pages</li>
+          <li class="td-menu-item" data-tool="watermark">🔤 Add Watermark</li>
+          <li class="td-menu-item" data-tool="protect">🔐 Protect with Password</li>
+          <li class="td-menu-item" data-tool="unlock">🔓 Unlock PDF</li>
+          <li class="td-menu-item" data-tool="jpgtopdf">🖼️ JPG to PDF</li>
+          <li class="td-menu-item" data-tool="pdftojpg">📸 PDF to JPG</li>
+          <li class="td-menu-item" data-tool="compress">🗜️ Compress PDF</li>
+          <li class="td-menu-item" data-tool="ocr">🤖 OCR Scan Text</li>
+          <li class="td-menu-item" data-tool="toword">📝 PDF to Word</li>
+          <li class="td-menu-item" data-tool="fromword">📥 Word to PDF</li>
+          <li class="td-menu-item" data-tool="edit">✏️ Back to Editor</li>
+          <li class="td-menu-item" data-tool="sign">✍️ Place Signature</li>
+        </ul>
+      </aside>
+      
+      <!-- Content Workspaces -->
+      <main class="td-content">
+        
+        <!-- ── panel: merge ── -->
+        <div class="tool-panel active" id="panel-merge">
+          <h3 class="panel-title">Merge PDFs 📑</h3>
+          <p class="panel-desc">Combine multiple PDF documents into a single professional document in seconds. Runs 100% locally in your browser.</p>
+          <div class="tool-card">
+            <div class="drop-file-zone" id="merge-dropzone">
+              <div class="drop-zone-icon">📥</div>
+              <div class="drop-zone-title">Click or drop multiple PDF files here</div>
+              <div class="drop-zone-desc">Only PDF files are supported</div>
+              <input type="file" id="merge-file-input" multiple accept="application/pdf,.pdf" style="display:none" />
+            </div>
+            <div class="file-list" id="merge-file-list"></div>
+          </div>
+          <button class="action-btn-primary" id="merge-btn" disabled>⚡ Merge and Download</button>
+        </div>
+        
+        <!-- ── panel: split ── -->
+        <div class="tool-panel" id="panel-split">
+          <h3 class="panel-title">Split PDF ✂️</h3>
+          <p class="panel-desc">Extract custom pages or ranges from your active PDF and save them as a separate file. Done 100% offline.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Extract Specific Pages</label>
+              <input type="text" class="form-input" id="split-range-input" placeholder="e.g. 1-3, 5, 8" />
+              <p style="font-size:10px;color:var(--text-muted);margin-top:6px;">Use commas to separate single pages, and hyphens for page ranges.</p>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="split-btn">⚡ Extract and Download</button>
+        </div>
+        
+        <!-- ── panel: organize ── -->
+        <div class="tool-panel" id="panel-organize">
+          <h3 class="panel-title">Organize PDF Pages 📁</h3>
+          <p class="panel-desc">Delete pages, or drag-and-drop / shift pages around to rebuild the final structure of your active document.</p>
+          <div class="tool-card">
+            <div class="organizer-grid" id="organizer-grid">
+              <!-- Filled via JS -->
+            </div>
+          </div>
+          <button class="action-btn-primary" id="organize-btn">⚡ Rebuild and Save PDF</button>
+        </div>
+        
+        <!-- ── panel: rotate ── -->
+        <div class="tool-panel" id="panel-rotate">
+          <h3 class="panel-title">Rotate PDF Pages 🔄</h3>
+          <p class="panel-desc">Instantly rotate individual pages or your entire PDF. Select direction and click compile.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Rotation Setting</label>
+              <select class="form-input" id="rotate-angle-select">
+                <option value="90">90° Clockwise</option>
+                <option value="180">180° Flip</option>
+                <option value="270">270° Counter-Clockwise</option>
+              </select>
+            </div>
+            <div class="form-group" style="display:flex;gap:12px;margin-top:12px;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="rotate-scope" value="all" checked /> All Pages</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="rotate-scope" value="active" /> Active Page Only</label>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="rotate-btn">⚡ Apply & Download</button>
+        </div>
+        
+        <!-- ── panel: watermark ── -->
+        <div class="tool-panel" id="panel-watermark">
+          <h3 class="panel-title">Add Custom Watermark 🔤</h3>
+          <p class="panel-desc">Place an elegant diagonal watermark label behind or on top of every page in your active PDF.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Watermark Text</label>
+              <input type="text" class="form-input" id="watermark-text-input" placeholder="e.g. CONFIDENTIAL / DRAFT" />
+            </div>
+            <div class="form-group">
+              <label>Watermark Opacity</label>
+              <input type="range" class="form-input" id="watermark-opacity-input" min="1" max="10" value="3" />
+            </div>
+          </div>
+          <button class="action-btn-primary" id="watermark-btn">⚡ Burn Watermark & Save</button>
+        </div>
+        
+        <!-- ── panel: protect ── -->
+        <div class="tool-panel" id="panel-protect">
+          <h3 class="panel-title">Protect PDF with Password 🔐</h3>
+          <p class="panel-desc">Lock your document with high-security client-side encryption. Restrict unauthorized opening or copying.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Set User Password</label>
+              <input type="password" class="form-input" id="protect-user-pass" placeholder="Enter password to open PDF..." />
+            </div>
+            <div class="form-group">
+              <label>Set Master Owner Password</label>
+              <input type="password" class="form-input" id="protect-owner-pass" placeholder="Enter owner permissions password..." />
+            </div>
+          </div>
+          <button class="action-btn-primary" id="protect-btn">⚡ Encrypt and Download</button>
+        </div>
+        
+        <!-- ── panel: unlock ── -->
+        <div class="tool-panel" id="panel-unlock">
+          <h3 class="panel-title">Unlock PDF 🔓</h3>
+          <p class="panel-desc">Remove passwords, restrictions, and locks from security-protected PDFs client-side instantly.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Input Active Password</label>
+              <input type="password" class="form-input" id="unlock-pass-input" placeholder="Enter security password to decrypt..." />
+            </div>
+          </div>
+          <button class="action-btn-primary" id="unlock-btn">⚡ Decrypt & Unlock</button>
+        </div>
+        
+        <!-- ── panel: jpgtopdf ── -->
+        <div class="tool-panel" id="panel-jpgtopdf">
+          <h3 class="panel-title">JPG to PDF Converter 🖼️</h3>
+          <p class="panel-desc">Convert standard image assets (JPG, PNG, JPEG) into elegant pages of a single PDF file offline.</p>
+          <div class="tool-card">
+            <div class="drop-file-zone" id="jpg-dropzone">
+              <div class="drop-zone-icon">📸</div>
+              <div class="drop-zone-title">Click or drop image files here</div>
+              <div class="drop-zone-desc">Supports PNG, JPG, JPEG formats</div>
+              <input type="file" id="jpg-file-input" multiple accept="image/png, image/jpeg, image/jpg" style="display:none" />
+            </div>
+            <div class="file-list" id="jpg-file-list"></div>
+          </div>
+          <button class="action-btn-primary" id="jpgtopdf-btn" disabled>⚡ Compile Images to PDF</button>
+        </div>
+        
+        <!-- ── panel: pdftojpg ── -->
+        <div class="tool-panel" id="panel-pdftojpg">
+          <h3 class="panel-title">PDF to JPG High-Res Exporter 📸</h3>
+          <p class="panel-desc">Convert and extract specific pages of your active PDF into high-quality JPEG image files offline.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Select Page to Extract</label>
+              <input type="number" class="form-input" id="pdftojpg-page-num" min="1" value="1" />
+            </div>
+          </div>
+          <button class="action-btn-primary" id="pdftojpg-btn">⚡ Export Page Frame as JPG</button>
+        </div>
+        
+        <!-- ── panel: compress ── -->
+        <div class="tool-panel" id="panel-compress">
+          <h3 class="panel-title">Compress PDF Size 🗜️</h3>
+          <p class="panel-desc">Shrink the digital footprint of large PDFs for emails or web listings without compromising core quality.</p>
+          <div class="tool-card">
+            <div class="form-group">
+              <label>Select Compression Method</label>
+              <select class="form-input" id="compress-level">
+                <option value="extreme">Extreme Compression (Low quality, maximum shrink)</option>
+                <option value="recommended" selected>Recommended Compression (High quality, good shrink)</option>
+                <option value="low">Low Compression (Very high quality, minor shrink)</option>
+              </select>
+            </div>
+            
+            <div class="progress-container" id="compress-progress-container">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="compress-progress-bar"></div>
+              </div>
+              <div class="progress-label">
+                <span id="compress-status-lbl">Analyzing document contents...</span>
+                <span id="compress-percentage-lbl">0%</span>
+              </div>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="compress-btn">⚡ Optimize PDF Size</button>
+        </div>
+        
+        <!-- ── panel: ocr ── -->
+        <div class="tool-panel" id="panel-ocr">
+          <h3 class="panel-title">Local OCR Scanned Text Recognition 🤖</h3>
+          <p class="panel-desc">Run offline character recognition scanners on your PDF viewports and extract copyable text instantly.</p>
+          <div class="tool-card">
+            <div class="scanner-container" id="ocr-scanner" style="display:none;">
+              <div class="scanner-line"></div>
+              <div class="scanner-text">PARSING CANVAS PIXELS & EXTRACTING GLYPHS...</div>
+            </div>
+            
+            <div class="form-group">
+              <label>Extracted Page Text</label>
+              <textarea class="form-input" id="ocr-result-text" rows="5" placeholder="Extracted character text will display here..." readonly style="resize:vertical;"></textarea>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="ocr-btn">⚡ Scan and Extract Active Page</button>
+        </div>
+        
+        <!-- ── panel: toword ── -->
+        <div class="tool-panel" id="panel-toword">
+          <h3 class="panel-title">PDF to Word Conversion 📝</h3>
+          <p class="panel-desc">Intelligently transform complex PDF binary structures into editable Microsoft Word (.docx) documents.</p>
+          <div class="tool-card">
+            <div class="progress-container" id="toword-progress-container">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="toword-progress-bar"></div>
+              </div>
+              <div class="progress-label">
+                <span id="toword-status-lbl">De-serializing PDF elements...</span>
+                <span id="toword-percentage-lbl">0%</span>
+              </div>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="toword-btn">⚡ Convert to Editable Word</button>
+        </div>
+        
+        <!-- ── panel: fromword ── -->
+        <div class="tool-panel" id="panel-fromword">
+          <h3 class="panel-title">Word to PDF Converter 📥</h3>
+          <p class="panel-desc">Drop editable Word (.docx) documents, format them natively, and download professional PDFs offline.</p>
+          <div class="tool-card">
+            <div class="drop-file-zone" id="word-dropzone">
+              <div class="drop-zone-icon">📝</div>
+              <div class="drop-zone-title">Click or drop Word document here</div>
+              <div class="drop-zone-desc">Only .docx and .doc files are supported</div>
+              <input type="file" id="word-file-input" accept=".docx,.doc" style="display:none" />
+            </div>
+            
+            <div class="progress-container" id="fromword-progress-container">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="fromword-progress-bar"></div>
+              </div>
+              <div class="progress-label">
+                <span id="fromword-status-lbl">Parsing Word document tags...</span>
+                <span id="fromword-percentage-lbl">0%</span>
+              </div>
+            </div>
+          </div>
+          <button class="action-btn-primary" id="fromword-btn" disabled>⚡ Compile Word into PDF</button>
+        </div>
+
+      </main>
     </div>
   </div>
 </div>
