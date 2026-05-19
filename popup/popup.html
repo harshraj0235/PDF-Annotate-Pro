@@ -434,7 +434,10 @@
   <div class="recent-panel" id="recent-panel">
     <div class="recent-header">
       <span class="recent-title">📂 Recent Files</span>
-      <button class="recent-close" id="recent-close">Close</button>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="btn-clear-history" style="background: transparent; border: none; color: #ff6584; font-size: 11px; cursor: pointer; text-decoration: underline; font-weight: 500; font-family: inherit;">Clear All</button>
+        <button class="recent-close" id="recent-close">Close</button>
+      </div>
     </div>
     <div class="recent-list" id="recent-list">
       <div class="recent-empty">No recent files opened yet.<br/>Open a PDF to start your list!</div>

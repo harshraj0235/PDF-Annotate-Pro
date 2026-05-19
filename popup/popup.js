@@ -184,6 +184,15 @@ document.getElementById('link-history').addEventListener('click', () => {
   });
 });
 
+document.getElementById('btn-clear-history').addEventListener('click', () => {
+  if (confirm('Are you sure you want to clear your recently opened PDF files history?')) {
+    chrome.storage.local.remove(['recentFiles'], () => {
+      recentList.innerHTML = `<div class="recent-empty">No recent files opened yet.<br/>Open a PDF to start your list!</div>`;
+      showToast('🗑️ History cleared successfully');
+    });
+  }
+});
+
 document.getElementById('recent-close').addEventListener('click', () => {
   recentPanel.classList.remove('show');
 });
