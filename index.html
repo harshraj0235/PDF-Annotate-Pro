@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Annotate Pro — Elegant, Local & Private PDF Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #070b14;
+      --surface: #0f1424;
+      --primary: #6c63ff;
+      --accent: #4facfe;
+      --text: #e8eaf6;
+      --muted: #7986cb;
+      --success: #00e5a0;
+      --danger: #ff6584;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.06);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Ambient glow backgrounds */
+    .bg-glow-1 {
+      position: absolute; top: -100px; left: -100px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, transparent 75%);
+      pointer-events: none; z-index: 0;
+    }
+    .bg-glow-2 {
+      position: absolute; top: 800px; right: -200px;
+      width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(79, 172, 254, 0.08) 0%, transparent 75%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Navigation */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(7, 11, 20, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .nav-container {
+      max-width: 1100px; margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 18px; color: #fff;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: bold;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 28px;
+    }
+    .nav-link {
+      color: var(--muted); text-decoration: none; font-size: 14px;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-link:hover { color: #fff; }
+    .btn-nav-download {
+      padding: 10px 20px; font-size: 13px; font-weight: 600;
+      border-radius: 8px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+    }
+    .btn-nav-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(108, 99, 255, 0.35);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 900px; margin: 0 auto;
+      padding: 96px 24px 64px; text-align: center;
+      position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 20px;
+      background: rgba(108, 99, 255, 0.12);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      color: #a29bfe; font-size: 11px; font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 52px; font-weight: 800; line-height: 1.15;
+      letter-spacing: -1.5px; margin-bottom: 20px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px; color: var(--muted); max-width: 580px;
+      margin: 0 auto 36px; line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex; justify-content: center; gap: 16px;
+    }
+    .btn-hero {
+      padding: 14px 32px; font-size: 15px; font-weight: 600;
+      border-radius: 12px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-hero-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; box-shadow: 0 8px 24px rgba(108, 99, 255, 0.3);
+      border: none;
+    }
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(108, 99, 255, 0.45);
+    }
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff; border: 1px solid var(--glass-border);
+    }
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Core Features Grid */
+    .section-wrap {
+      max-width: 1000px; margin: 0 auto;
+      padding: 64px 24px; position: relative; z-index: 1;
+    }
+    .section-title {
+      text-align: center; margin-bottom: 48px;
+    }
+    .section-title h2 {
+      font-size: 32px; font-weight: 700; margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+    .section-title p {
+      font-size: 15px; color: var(--muted);
+    }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px; padding: 28px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(108, 99, 255, 0.25);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .feature-icon {
+      font-size: 32px; margin-bottom: 16px;
+      display: inline-block;
+    }
+    .feature-name {
+      font-size: 16px; font-weight: 600; margin-bottom: 8px;
+      color: #fff;
+    }
+    .feature-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+    }
+
+    /* Privacy banner */
+    .privacy-highlight-box {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.06) 0%, rgba(79, 172, 254, 0.04) 100%);
+      border: 1px solid rgba(108, 99, 255, 0.15);
+      border-radius: 20px; padding: 40px;
+      display: flex; gap: 32px; align-items: center;
+      margin-bottom: 64px;
+    }
+    .privacy-highlight-icon {
+      font-size: 64px;
+    }
+    .privacy-highlight-content h3 {
+      font-size: 22px; font-weight: 700; margin-bottom: 12px;
+    }
+    .privacy-highlight-content p {
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+
+    /* Privacy Policy Content Section */
+    .privacy-doc-section {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px; padding: 48px;
+      backdrop-filter: blur(20px);
+    }
+    .privacy-header {
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 24px; margin-bottom: 32px;
+    }
+    .privacy-header h2 {
+      font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    }
+    .privacy-header .meta {
+      font-size: 12px; color: var(--muted);
+    }
+    .policy-block {
+      margin-bottom: 28px;
+    }
+    .policy-block h3 {
+      font-size: 16px; font-weight: 600; margin-bottom: 10px;
+      color: #fff; display: flex; align-items: center; gap: 10px;
+    }
+    .policy-block p, .policy-block li {
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+    }
+    .policy-block ul {
+      padding-left: 20px; margin-top: 8px;
+    }
+    .policy-block li {
+      margin-bottom: 6px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 48px 24px; text-align: center;
+      background: rgba(7, 11, 20, 0.5);
+    }
+    .footer-container {
+      max-width: 1000px; margin: 0 auto;
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 32px; margin-bottom: 20px;
+    }
+    .footer-link {
+      color: var(--muted); text-decoration: none; font-size: 13px;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #fff; }
+    .copyright {
+      font-size: 12px; color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 38px; }
+      .privacy-highlight-box { flex-direction: column; text-align: center; padding: 28px; gap: 16px; }
+      .privacy-doc-section { padding: 24px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">🖊️</div>
+        <span>PDF Annotate Pro</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#privacy" class="nav-link">Privacy Policy</a>
+        <a href="https://github.com/harshraj0235/PDF-Annotate-Pro/issues" target="_blank" class="nav-link">Support & Issues</a>
+      </div>
+      <a href="https://github.com/harshraj0235/PDF-Annotate-Pro" target="_blank" class="btn-nav-download">Add to Browser</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>🛡️</span> 100% Local Sandbox — Zero Server Uploads
+    </div>
+    <h1>Annotate, Highlight, and Edit PDFs<br/><span>Natively inside your Browser</span></h1>
+    <p>The ultimate lightweight, ultra-secure, and offline-first browser extension for marking up, signing, password protecting, and converting any PDF instantly.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/harshraj0235/PDF-Annotate-Pro" target="_blank" class="btn-hero btn-hero-primary">Add to Chrome (Free)</a>
+      <a href="#privacy" class="btn-hero btn-hero-secondary">View Privacy Policy</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section-wrap" id="features">
+    <div class="section-title">
+      <h2>Offline PDF Toolbox 🛠️</h2>
+      <p>Powerful client-side engines that execute completely local inside your sandboxed browser.</p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">✂️</span>
+        <h4 class="feature-name">Split PDF</h4>
+        <p class="feature-desc">Extract specific custom pages or ranges easily into a standalone PDF document locally.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📁</span>
+        <h4 class="feature-name">Organize Pages</h4>
+        <p class="feature-desc">Rearrange, rotate, delete, or shuffle pages on a beautiful thumbnail grid layout.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔄</span>
+        <h4 class="feature-name">Rotate Pages</h4>
+        <p class="feature-desc">Instantly rotate single pages or full document structures 90°, 180°, or 270°.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔤</span>
+        <h4 class="feature-name">Burn Watermarks</h4>
+        <p class="feature-desc">Apply elegant custom diagonal watermark text stamps with adjustable opacity layers.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔐</span>
+        <h4 class="feature-name">Password Encryption</h4>
+        <p class="feature-desc">Secure confidential docs with strong user permissions passwords instantly.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔓</span>
+        <h4 class="feature-name">Remove Restrictions</h4>
+        <p class="feature-desc">Decrypt and remove passwords or edit restrictions from PDFs client-side.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <h4 class="feature-name">Local OCR Scanner</h4>
+        <p class="feature-desc">Run intelligent optical character recognition to extract copyable text off scanned pages.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🗜️</span>
+        <h4 class="feature-name">Compress File Size</h4>
+        <p class="feature-desc">Reduce the digital weight of large PDFs for listing portals while keeping clear text.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📝</span>
+        <h4 class="feature-name">PDF to Word</h4>
+        <p class="feature-desc">De-serialize compound vector paths and structures into editable Word documents.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy Highlight Box -->
+  <section class="section-wrap">
+    <div class="privacy-highlight-box">
+      <div class="privacy-highlight-icon">🔒</div>
+      <div class="privacy-highlight-content">
+        <h3>100% Local & GDPR / CCPA Compliant</h3>
+        <p>Unlike other PDF websites that require you to upload private contracts and sensitive invoices to remote web servers, PDF Annotate Pro runs completely inside your local browser. Your data never leaves your machine. Ever.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Official Privacy Policy Doc -->
+  <section class="section-wrap" id="privacy">
+    <div class="privacy-doc-section">
+      <div class="privacy-header">
+        <h2>Official Privacy Policy</h2>
+        <span class="meta">Last Updated: May 19, 2026</span>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>1.</span> 100% Local Processing & Zero Server Uploads</h3>
+        <p>Your privacy is our absolute priority. No PDF collection happens on our end. All PDF processing, rendering, drawing, annotating, signing, and exporting happen entirely in your browser sandbox. Your files are never uploaded to any external server, cloud infrastructure, or third party. Everything is computed locally on your machine using client-side JavaScript.</p>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>2.</span> Information We Collect</h3>
+        <p>We do not collect any personal data, usage metrics, or file content. However, we handle minimal, non-sensitive data required for premium features:</p>
+        <ul>
+          <li><strong>License Keys:</strong> If you upgrade to the Pro plan, your unique, randomly-generated license key is saved in Chrome's synchronized storage (<code>chrome.storage.sync</code>) so it stays active across your devices.</li>
+          <li><strong>Temporary Upload Storage:</strong> To facilitate transferring a PDF between the extension pages (e.g. from the upgrade screen to the editor), the extension uses Chrome's secure local storage (<code>chrome.storage.local</code>). This data remains strictly sandboxed on your device and is automatically deleted as soon as the PDF is loaded in the editor.</li>
+        </ul>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>3.</span> Payment Processing (Razorpay)</h3>
+        <p>When you upgrade to the Pro plan, payments are processed securely through our trusted third-party payment partner, Razorpay. The payment window runs in a separate, secure sandbox tab. We do not collect or store your credit card numbers, bank details, or billing information. All payment details are encrypted and securely handled directly by Razorpay under their respective privacy policy.</p>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>4.</span> Permissions Used & Rationale</h3>
+        <p>To function properly, the Extension requests the following browser permissions. Here is why we need them:</p>
+        <ul>
+          <li><strong><code>activeTab</code>:</strong> Allows the extension to interact with the current tab to retrieve the PDF URL when you click "Annotate Current Tab".</li>
+          <li><strong><code>storage</code> / <code>unlimitedStorage</code>:</strong> Used to save your active license key and temporarily hold PDF data on your device during transition pages (like uploading a file on the upgrade page).</li>
+          <li><strong><code>downloads</code>:</strong> Required to let you save/download your newly annotated PDF locally to your device.</li>
+          <li><strong><code>tabs</code>:</strong> Used to open new workspace or payment tabs securely.</li>
+          <li><strong><code>&lt;all_urls&gt;</code>:</strong> Necessary only for our content script to check if the page you're currently viewing is a PDF document, offering to open it instantly inside our annotator.</li>
+        </ul>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>5.</span> Third-Party Services</h3>
+        <p>Our extension does not use any third-party analytics trackers, cookies, or advertisements. The only external link is to Razorpay for secure payments and Github for open-source support.</p>
+      </div>
+
+      <div class="policy-block">
+        <h3><span>6.</span> Contact Us</h3>
+        <p>If you have any questions or suggestions regarding this Privacy Policy, please feel free to reach out by opening an issue on our GitHub repository:</p>
+        <p style="margin-top: 8px;"><a href="https://github.com/harshraj0235/PDF-Annotate-Pro" target="_blank" style="color: var(--primary); text-decoration: underline; font-weight: 500;">https://github.com/harshraj0235/PDF-Annotate-Pro</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="#" class="footer-link">Home</a>
+        <a href="#features" class="footer-link">Features</a>
+        <a href="#privacy" class="footer-link">Privacy Policy</a>
+        <a href="https://github.com/harshraj0235/PDF-Annotate-Pro/issues" target="_blank" class="footer-link">Support Forum</a>
+      </div>
+      <div class="copyright">
+        &copy; 2026 PDF Annotate Pro. All rights reserved. Runs 100% locally.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
