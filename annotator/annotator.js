@@ -79,6 +79,7 @@ const pageThumbs   = document.getElementById('page-thumbs');
     }
   }
   setupDragDrop();
+  setupPanelUploaders();
 })();
 
 // ── Plan check ────────────────────────────────────────────────────
@@ -135,6 +136,7 @@ async function loadPdfFromUrl(url) {
     if (pageThumbs) generateThumbnails();
     await renderPage(currentPage);
     setStatus('PDF loaded — ' + totalPages + ' page(s)');
+    window.dispatchEvent(new Event('pdf-loaded-sync'));
   } catch (e) {
     showToast('Failed to load PDF: ' + e.message, 'error');
     showLoading(false);
@@ -166,6 +168,7 @@ async function loadPdfFromArrayBuffer(typedArray) {
     if (pageThumbs) generateThumbnails();
     await renderPage(currentPage);
     setStatus('PDF loaded — ' + totalPages + ' page(s)');
+    window.dispatchEvent(new Event('pdf-loaded-sync'));
   } catch(e) {
     showToast('Failed to load PDF', 'error');
     showLoading(false);
@@ -1564,5 +1567,70 @@ if (fromwordBtn) {
       }
     }, 100);
   });
+}
+
+// ── Shared Panel Uploader Syncing Logic ──
+function setupPanelUploaders() {
+  document.querySelectorAll('.panel-uploader').forEach(card => {
+    const dropzone = card.querySelector('.drop-file-zone');
+    const input = card.querySelector('.panel-file-input');
+    const info = card.querySelector('.uploader-file-info');
+    const nameEl = card.querySelector('.loaded-file-name');
+    const changeBtn = card.querySelector('.change-file-btn');
+    
+    function syncState() {
+      if (activePdfBytes) {
+        dropzone.style.display = 'none';
+        info.style.display = 'flex';
+        nameEl.textContent = fileName;
+      } else {
+        dropzone.style.display = 'block';
+        info.style.display = 'none';
+      }
+    }
+    
+    dropzone.addEventListener('click', () => input.click());
+    dropzone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--primary)';
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = 'var(--glass-border)';
+    });
+    dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--glass-border)';
+      if (e.dataTransfer.files[0]) handleUploadedFile(e.dataTransfer.files[0]);
+    });
+    input.addEventListener('change', e => {
+      if (e.target.files[0]) handleUploadedFile(e.target.files[0]);
+    });
+    changeBtn.addEventListener('click', () => input.click());
+    
+    syncState();
+    window.addEventListener('pdf-loaded-sync', syncState);
+  });
+}
+
+async function handleUploadedFile(file) {
+  if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+    showToast('Please select a valid PDF document', 'error');
+    return;
+  }
+  
+  fileName = file.name;
+  if (fileNameEl) fileNameEl.textContent = file.name;
+  document.title = fileName + ' — PDF Annotate Pro';
+  
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const bytes = new Uint8Array(e.target.result);
+    await loadPdfFromArrayBuffer(bytes);
+    
+    // Dispatch global event to sync all panel uploaders
+    window.dispatchEvent(new Event('pdf-loaded-sync'));
+    showToast(`✅ Loaded: ${file.name}`, 'success');
+  };
+  reader.readAsArrayBuffer(file);
 }
 
