@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Annotate Pro</title>
+  <link rel="stylesheet" href="annotator.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ TOP TOOLBAR ══════════════════════════════════════════════ -->
+  <div id="toolbar">
+    <button id="sidebar-toggle" title="Toggle Sidebar">☰</button>
+
+    <div class="tb-logo">
+      <span class="tb-logo-icon">📄</span>
+      <span class="tb-logo-text">PDF Annotate Pro</span>
+    </div>
+
+    <!-- Drawing Tools -->
+    <button class="tool-btn active" id="tool-highlight" data-tool="highlight" data-tip="Highlight (H)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </button>
+
+    <button class="tool-btn" id="tool-pen" data-tool="pen" data-tip="Freehand Pen (P)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+    </button>
+
+    <button class="tool-btn" id="tool-text" data-tool="text" data-tip="Text Note (T)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+    </button>
+
+    <button class="tool-btn" id="tool-eraser" data-tool="eraser" data-tip="Eraser (E)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/><path d="M6 11l4 4"/></svg>
+    </button>
+
+    <!-- Pro Tools -->
+    <button class="tool-btn locked" id="tool-rect" data-tool="rect" data-tip="Rectangle (R)" title="Rectangle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      <span class="lock-badge">🔒</span>
+    </button>
+
+    <button class="tool-btn locked" id="tool-circle" data-tool="circle" data-tip="Circle (C)" title="Circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+      <span class="lock-badge">🔒</span>
+    </button>
+
+    <button class="tool-btn locked" id="tool-arrow" data-tool="arrow" data-tip="Arrow (A)" title="Arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      <span class="lock-badge">🔒</span>
+    </button>
+
+    <button class="tool-btn locked" id="tool-signature" data-tool="signature" data-tip="Signature (S)" title="Signature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17c3-3 6-6 9-6s5 4 8 4"/><path d="M7 11c1-2 3-4 5-4"/></svg>
+      <span class="lock-badge">🔒</span>
+    </button>
+
+    <button class="tool-btn locked" id="tool-stamp" data-tool="stamp" data-tip="Stamp (Pro)" title="Stamp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="18" width="20" height="3" rx="1"/><path d="M7 18V15a5 5 0 0110 0v3"/><rect x="9" y="6" width="6" height="5" rx="1"/></svg>
+      <span class="lock-badge">🔒</span>
+    </button>
+
+    <div class="tb-sep"></div>
+
+    <!-- Colors -->
+    <div class="color-row" id="color-row">
+      <div class="color-dot active" style="background:#ffd600" data-color="#ffd600" title="Yellow"></div>
+      <div class="color-dot" style="background:#ff6584" data-color="#ff6584" title="Red"></div>
+      <div class="color-dot" style="background:#00e5a0" data-color="#00e5a0" title="Green"></div>
+      <div class="color-dot" style="background:#4facfe" data-color="#4facfe" title="Blue"></div>
+      <div class="color-dot" style="background:#ff9f43" data-color="#ff9f43" title="Orange"></div>
+      <div class="color-dot" style="background:#a29bfe" data-color="#a29bfe" title="Purple"></div>
+      <div class="color-dot" style="background:#ffffff" data-color="#ffffff" title="White"></div>
+      <div class="color-dot" style="background:#000000" data-color="#000000" title="Black"></div>
+      <input type="color" id="custom-color" value="#ffd600" title="Custom color" />
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <!-- Stroke Size -->
+    <div class="slider-wrap">
+      <span class="slider-label">Size</span>
+      <input type="range" id="stroke-size" min="1" max="30" value="4" />
+      <span class="slider-label" id="stroke-size-val">4px</span>
+    </div>
+
+    <!-- Opacity -->
+    <div class="slider-wrap">
+      <span class="slider-label">Opacity</span>
+      <input type="range" id="opacity-slider" min="10" max="100" value="60" />
+      <span class="slider-label" id="opacity-val">60%</span>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <!-- Page Nav -->
+    <div class="page-nav">
+      <button class="page-nav-btn" id="btn-prev" title="Previous page (←)">‹</button>
+      <span id="page-info">— / —</span>
+      <button class="page-nav-btn" id="btn-next" title="Next page (→)">›</button>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <!-- Zoom -->
+    <div class="zoom-row">
+      <button class="zoom-btn" id="btn-zoom-out" title="Zoom out (-)">−</button>
+      <span id="zoom-label">100%</span>
+      <button class="zoom-btn" id="btn-zoom-in" title="Zoom in (+)">+</button>
+      <button class="zoom-btn" id="btn-fit-page" title="Fit to page">⊡</button>
+    </div>
+
+    <!-- Undo / Redo -->
+    <div class="tb-sep"></div>
+    <button class="tool-btn" id="btn-undo" data-tip="Undo (Ctrl+Z)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+    </button>
+    <button class="tool-btn" id="btn-redo" data-tip="Redo (Ctrl+Y)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
+    </button>
+
+    <!-- Right Side Actions -->
+    <div class="tb-right">
+      <!-- Advanced Action Buttons -->
+      <button class="action-btn" id="btn-dark-mode" title="Dark Mode (D)">🌙</button>
+      <button class="action-btn" id="btn-rotate" title="Rotate Page (Shift+R)">🔄</button>
+      <button class="action-btn" id="btn-clear-all" title="Clear All Annotations">🗑️</button>
+      <button class="action-btn" id="btn-print" title="Print (Ctrl+P)">🖨️</button>
+      <button class="action-btn" id="btn-fullscreen" title="Fullscreen (F11)">⛶</button>
+      <button class="action-btn" id="btn-shortcuts" title="Keyboard Shortcuts (?)">⌨️</button>
+      <div class="tb-sep"></div>
+      <div class="plan-chip" id="plan-chip">Free · 5 exports/mo</div>
+    </div>
+  </div>
+
+  <!-- ══ BODY ROW ══════════════════════════════════════════════════ -->
+  <div id="body-row">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Pages & Annotations</span>
+        <button class="sidebar-close" id="sidebar-close-btn">×</button>
+      </div>
+
+      <!-- Page Thumbnails -->
+      <div class="sidebar-section-title">📑 Pages</div>
+      <div id="page-thumbs" class="page-thumbs-container"></div>
+
+      <div class="sidebar-section-title">✏️ Annotations</div>
+      <div id="ann-list">
+        <div class="sidebar-empty" id="ann-empty">
+          <div class="icon">✏️</div>
+          <div>No annotations yet.<br/>Start drawing on the PDF!</div>
+        </div>
+      </div>
+      <button class="btn-export" id="btn-export" style="width: calc(100% - 24px); margin: 12px; margin-top: auto; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export PDF
+      </button>
+      <div class="sidebar-pro-banner" id="sidebar-pro-banner" style="margin-top: 0;">
+        <div class="banner-title">✨ Unlock Pro Features</div>
+        <div class="banner-sub">Shapes · Stamps · Signatures · Unlimited exports</div>
+      </div>
+    </div>
+
+    <!-- Canvas Area -->
+    <div id="canvas-area">
+
+      <!-- Drop Zone (shown when no PDF loaded) -->
+      <div id="dropzone">
+        <div class="drop-dashed"></div>
+        <div class="drop-icon">📄</div>
+        <div class="drop-title">Open a PDF to Annotate</div>
+        <div class="drop-sub">Drop a PDF here, or use the buttons below<br/>Works with any PDF — local files or URLs</div>
+        <button class="drop-btn" id="drop-open-btn">
+          Choose PDF File
+        </button>
+        <button class="drop-btn drop-btn-secondary" id="drop-url-btn">
+          Open from URL
+        </button>
+      </div>
+
+      <!-- Canvas Wrapper -->
+      <div id="canvas-wrap" style="display:none">
+        <canvas id="pdf-canvas"></canvas>
+        <canvas id="ann-canvas"></canvas>
+        <textarea id="text-input-overlay" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="hidden">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading PDF…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STATUS BAR ════════════════════════════════════════════════ -->
+  <div id="statusbar">
+    <div class="status-item"><div class="status-dot"></div><span id="status-text">Ready</span></div>
+    <div class="status-item" id="status-ann-count">Annotations: 0</div>
+    <div class="status-item" id="status-file-name">No file loaded</div>
+    <div class="status-item" id="status-coords">x: — y: —</div>
+  </div>
+</div>
+
+<!-- ══ UPGRADE MODAL ════════════════════════════════════════════════ -->
+<div id="upgrade-modal" class="hidden">
+  <div class="modal-box">
+    <div class="modal-badge">⚡ PDF Annotate Pro</div>
+    <div class="modal-title">Upgrade to Pro</div>
+    <div class="modal-sub">Upgrade for unlimited exports + all advanced tools.</div>
+
+    <div class="modal-features">
+      <div class="modal-feature"><span class="check">✓</span> Unlimited PDF exports</div>
+      <div class="modal-feature"><span class="check">✓</span> Signature tool (draw or type)</div>
+      <div class="modal-feature"><span class="check">✓</span> Shapes: Rectangle, Circle, Arrow</div>
+      <div class="modal-feature"><span class="check">✓</span> Stamp library</div>
+      <div class="modal-feature"><span class="check">✓</span> Dark mode for PDFs</div>
+      <div class="modal-feature"><span class="check">✓</span> Page rotation & management</div>
+      <div class="modal-feature"><span class="check">✓</span> All future updates free</div>
+    </div>
+
+    <button class="modal-btn" id="modal-upgrade-btn">Get Pro — ₹499 →</button>
+    <div class="modal-close-row">
+      <button class="modal-close-btn" id="modal-close-btn">Maybe later — I'll keep the free plan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIGNATURE MODAL ════════════════════════════════════════════ -->
+<div id="sig-modal" class="hidden">
+  <div class="modal-box">
+    <div class="modal-badge">✍️ Add Signature</div>
+    <div class="modal-title" style="font-size:18px;margin-bottom:16px;">Draw your signature</div>
+    <canvas id="sig-canvas" width="460" height="160"></canvas>
+    <div class="sig-actions">
+      <button class="sig-btn" id="sig-clear-btn">Clear</button>
+      <button class="sig-btn" id="sig-cancel-btn">Cancel</button>
+      <button class="sig-btn primary" id="sig-confirm-btn">Place Signature</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STAMP MODAL ════════════════════════════════════════════════ -->
+<div id="stamp-modal" class="hidden">
+  <div class="modal-box">
+    <div class="modal-badge">📌 Stamp Library</div>
+    <div class="modal-title" style="font-size:18px;margin-bottom:16px;">Choose a stamp</div>
+    <div class="stamp-grid" id="stamp-grid">
+      <div class="stamp-item" data-stamp="APPROVED" data-color="#00e5a0">
+        <span style="color:#00e5a0;font-weight:800;font-size:16px;border:3px solid #00e5a0;padding:6px 16px;border-radius:6px;">APPROVED</span>
+      </div>
+      <div class="stamp-item" data-stamp="REJECTED" data-color="#ff6584">
+        <span style="color:#ff6584;font-weight:800;font-size:16px;border:3px solid #ff6584;padding:6px 16px;border-radius:6px;">REJECTED</span>
+      </div>
+      <div class="stamp-item" data-stamp="DRAFT" data-color="#ffd600">
+        <span style="color:#ffd600;font-weight:800;font-size:16px;border:3px solid #ffd600;padding:6px 16px;border-radius:6px;">DRAFT</span>
+      </div>
+      <div class="stamp-item" data-stamp="CONFIDENTIAL" data-color="#ff9f43">
+        <span style="color:#ff9f43;font-weight:800;font-size:14px;border:3px solid #ff9f43;padding:6px 12px;border-radius:6px;">CONFIDENTIAL</span>
+      </div>
+      <div class="stamp-item" data-stamp="REVIEWED" data-color="#4facfe">
+        <span style="color:#4facfe;font-weight:800;font-size:16px;border:3px solid #4facfe;padding:6px 16px;border-radius:6px;">REVIEWED</span>
+      </div>
+      <div class="stamp-item" data-stamp="FINAL" data-color="#a29bfe">
+        <span style="color:#a29bfe;font-weight:800;font-size:16px;border:3px solid #a29bfe;padding:6px 16px;border-radius:6px;">FINAL</span>
+      </div>
+      <div class="stamp-item" data-stamp="URGENT" data-color="#ff3838">
+        <span style="color:#ff3838;font-weight:800;font-size:16px;border:3px solid #ff3838;padding:6px 16px;border-radius:6px;">⚠ URGENT</span>
+      </div>
+      <div class="stamp-item" data-stamp="SIGN HERE" data-color="#00e5a0">
+        <span style="color:#00e5a0;font-weight:800;font-size:14px;border:3px solid #00e5a0;padding:6px 12px;border-radius:6px;">✍ SIGN HERE</span>
+      </div>
+    </div>
+    <div class="sig-actions">
+      <button class="sig-btn" id="stamp-cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KEYBOARD SHORTCUTS MODAL ══════════════════════════════════ -->
+<div id="shortcuts-modal" class="hidden">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-badge">⌨️ Keyboard Shortcuts</div>
+    <div class="modal-title" style="font-size:18px;margin-bottom:20px;">Master your workflow</div>
+    <div class="shortcuts-grid">
+      <div class="shortcut-row"><span class="key">H</span> Highlight tool</div>
+      <div class="shortcut-row"><span class="key">P</span> Pen tool</div>
+      <div class="shortcut-row"><span class="key">T</span> Text note tool</div>
+      <div class="shortcut-row"><span class="key">E</span> Eraser tool</div>
+      <div class="shortcut-row"><span class="key">R</span> Rectangle (Pro)</div>
+      <div class="shortcut-row"><span class="key">C</span> Circle (Pro)</div>
+      <div class="shortcut-row"><span class="key">A</span> Arrow (Pro)</div>
+      <div class="shortcut-row"><span class="key">S</span> Signature (Pro)</div>
+      <div class="shortcut-row"><span class="key">D</span> Toggle dark mode</div>
+      <div class="shortcut-row"><span class="key">←→</span> Previous / Next page</div>
+      <div class="shortcut-row"><span class="key">+ −</span> Zoom in / out</div>
+      <div class="shortcut-row"><span class="key">Ctrl+Z</span> Undo</div>
+      <div class="shortcut-row"><span class="key">Ctrl+Y</span> Redo</div>
+      <div class="shortcut-row"><span class="key">Ctrl+S</span> Export PDF</div>
+      <div class="shortcut-row"><span class="key">F11</span> Fullscreen</div>
+      <div class="shortcut-row"><span class="key">?</span> This panel</div>
+    </div>
+    <div class="sig-actions" style="margin-top:20px;">
+      <button class="sig-btn primary" id="shortcuts-close-btn">Got it!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ URL INPUT MODAL ══════════════════════════════════════════ -->
+<div id="url-modal" class="hidden">
+  <div class="modal-box" style="max-width:500px;">
+    <div class="modal-badge">🔗 Open from URL</div>
+    <div class="modal-title" style="font-size:18px;margin-bottom:16px;">Paste a PDF URL</div>
+    <input type="text" id="url-input" class="url-input-field" placeholder="https://example.com/document.pdf" />
+    <div class="sig-actions" style="margin-top:16px;">
+      <button class="sig-btn" id="url-cancel-btn">Cancel</button>
+      <button class="sig-btn primary" id="url-open-btn">Open PDF</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="hidden-file-input" accept="application/pdf,.pdf" style="display:none" />
+
+<script src="../lib/pdf.min.js"></script>
+<script src="annotator.js"></script>
+</body>
+</html>

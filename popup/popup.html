@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Annotate Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 340px;
+      min-height: 480px;
+      background: #0a0e1a;
+      color: #e8eaf6;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #6c63ff 0%, #4facfe 100%);
+      padding: 20px 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 60px;
+      width: 60px; height: 60px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+    .tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+      margin-left: 42px;
+    }
+
+    /* ── Plan Badge ── */
+    .plan-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .plan-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .plan-label {
+      font-size: 11px;
+      color: #7986cb;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+    .plan-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .plan-badge.free {
+      background: rgba(255,255,255,0.08);
+      color: #b0bec5;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .plan-badge.pro {
+      background: linear-gradient(135deg, #6c63ff, #4facfe);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(108,99,255,0.4);
+    }
+    .plan-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    /* ── Usage Bar ── */
+    .usage-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .usage-label { font-size: 12px; color: #7986cb; }
+    .usage-count { font-size: 12px; color: #e8eaf6; font-weight: 500; }
+    .usage-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .usage-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #6c63ff, #4facfe);
+      transition: width 0.5s ease;
+    }
+    .usage-bar-fill.danger { background: linear-gradient(90deg, #ff6584, #ff8a65); }
+
+    /* ── Main Buttons ── */
+    .actions { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px 16px;
+      background: linear-gradient(135deg, #6c63ff 0%, #4facfe 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(108,99,255,0.35);
+      letter-spacing: 0.1px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(108,99,255,0.5);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: #e8eaf6;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    /* ── URL Input ── */
+    .url-input-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .url-input {
+      flex: 1;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #e8eaf6;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .url-input::placeholder { color: #546e7a; }
+    .url-input:focus { border-color: #6c63ff; }
+    .url-go-btn {
+      padding: 0 14px;
+      background: #6c63ff;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .url-go-btn:hover { background: #5a52e0; }
+
+    /* ── Upgrade CTA ── */
+    .upgrade-cta {
+      margin: 0 20px 16px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(79,172,254,0.1));
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .upgrade-cta:hover {
+      background: linear-gradient(135deg, rgba(108,99,255,0.25), rgba(79,172,254,0.18));
+      border-color: rgba(108,99,255,0.5);
+      transform: translateY(-1px);
+    }
+    .upgrade-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e8eaf6;
+      margin-bottom: 3px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .upgrade-sub { font-size: 11px; color: #7986cb; }
+    .upgrade-arrow { margin-left: auto; color: #6c63ff; }
+
+    /* ── Features Grid ── */
+    .features {
+      padding: 0 20px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #90a4ae;
+    }
+    .feature-item .fi { font-size: 14px; }
+    .feature-item.locked { opacity: 0.5; }
+    .feature-item.locked::after { content: '🔒'; margin-left: auto; font-size: 10px; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 12px 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-link {
+      font-size: 11px;
+      color: #546e7a;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #6c63ff; }
+
+    /* Hidden file input */
+    #file-input { display: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 16px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e2235;
+      color: #e8eaf6;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">📄</div>
+      <div class="logo-text">PDF Annotate Pro</div>
+    </div>
+    <div class="tagline">Highlight · Draw · Sign · Export</div>
+  </div>
+
+  <!-- Plan Section -->
+  <div class="plan-section">
+    <div class="plan-row">
+      <span class="plan-label">Current Plan</span>
+      <div class="plan-badge free" id="plan-badge">
+        <span class="dot"></span>
+        <span id="plan-name">Free</span>
+      </div>
+    </div>
+    <div class="usage-row" id="usage-row">
+      <span class="usage-label">Exports this month</span>
+      <span class="usage-count" id="usage-count">0 / 5</span>
+    </div>
+    <div class="usage-bar" id="usage-bar-wrap">
+      <div class="usage-bar-fill" id="usage-bar" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn-primary" id="btn-open-file">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Open PDF File
+    </button>
+
+    <div class="url-input-wrap">
+      <input class="url-input" id="url-input" type="url" placeholder="Paste PDF URL (https://...)" />
+      <button class="url-go-btn" id="btn-url-go">→</button>
+    </div>
+
+    <button class="btn-secondary" id="btn-current-tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+      Annotate Current Tab PDF
+    </button>
+  </div>
+
+  <!-- Upgrade CTA (shown only for free plan) -->
+  <div class="upgrade-cta" id="upgrade-cta">
+    <div class="upgrade-title">
+      ✨ Upgrade to Pro
+      <span class="upgrade-arrow">→</span>
+    </div>
+    <div class="upgrade-sub">Unlimited exports · Signatures · Shapes · Cloud save</div>
+  </div>
+
+  <!-- Features Grid -->
+  <div class="features">
+    <div class="feature-item"><span class="fi">🖊️</span> Freehand Pen</div>
+    <div class="feature-item"><span class="fi">🔆</span> Highlights</div>
+    <div class="feature-item"><span class="fi">🔤</span> Text Notes</div>
+    <div class="feature-item"><span class="fi">↩️</span> Undo/Redo</div>
+    <div class="feature-item locked"><span class="fi">✍️</span> Signatures</div>
+    <div class="feature-item locked"><span class="fi">⬛</span> Shapes</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a class="footer-link" id="link-license">Enter License Key</a>
+    <a class="footer-link" id="link-history">Recent Files</a>
+    <a class="footer-link" id="link-help">Help</a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <input type="file" id="file-input" accept="application/pdf,.pdf" />
+
+  <script src="popup.js"></script>
+</body>
+</html>
